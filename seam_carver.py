@@ -95,3 +95,57 @@ def find_horizontal_seam(self):
             current_y = edge_to[current_y][x]
 
         return seam
+
+def remove_vertical_seam(self, seam):
+        """Removes a vertical seam from the image and updates its size."""
+        # Check to make sure the seam array is the right size
+        if len(seam) != self._height:
+            raise ValueError("Seam length must match the image height.")
+
+        # Create a new blank image that is 1 pixel narrower
+        new_width = self._width - 1
+        new_image = Image.new('RGB', (new_width, self._height))
+
+        # Loop through every row (y) and column (x)
+        for y in range(self._height):
+            seam_x = seam[y]  # The pixel we need to skip in this row
+            for x in range(self._width):
+                if x < seam_x:
+                    # Copy pixels that are to the left of the seam
+                    pixel_color = self._image.getpixel((x, y))
+                    new_image.putpixel((x, y), pixel_color)
+                elif x > seam_x:
+                    # Copy pixels that are to the right of the seam
+                    # We shift them left by 1 (x - 1) to close the gap
+                    pixel_color = self._image.getpixel((x, y))
+                    new_image.putpixel((x - 1, y), pixel_color)
+
+        # Replace the old image and width with the new ones
+        self._image = new_image
+        self._width = new_width
+
+def remove_horizontal_seam(self, seam):
+        """Removes a horizontal seam from the image and updates its size."""
+        if len(seam) != self._width:
+            raise ValueError("Seam length must match the image width.")
+
+        # Create a new blank image that is 1 pixel shorter
+        new_height = self._height - 1
+        new_image = Image.new('RGB', (self._width, new_height))
+
+        # Loop through every column (x) and row (y)
+        for x in range(self._width):
+            seam_y = seam[x]  # The pixel we need to skip in this column
+            for y in range(self._height):
+                if y < seam_y:
+                    # Copy pixels above the seam
+                    pixel_color = self._image.getpixel((x, y))
+                    new_image.putpixel((x, y), pixel_color)
+                elif y > seam_y:
+                    # Copy pixels below the seam, shifted up by 1 (y - 1)
+                    pixel_color = self._image.getpixel((x, y))
+                    new_image.putpixel((x, y - 1), pixel_color)
+
+        # Replace the old image and height with the new ones
+        self._image = new_image
+        self._height = new_height
