@@ -1,4 +1,31 @@
-def find_vertical_seam(self):
+import math
+from PIL import Image
+
+class SeamCarver:
+    def __init__(self, image: Image.Image):
+        """Initializes the seam carver with an image."""
+        # Convert to RGB to ensure getting (r, g, b) tuples
+        self._image = image.convert("RGB")
+        self._width = self._image.width
+        self._height = self._image.height
+
+    def energy(self, x, y):
+        """Calculates the dual-gradient energy of a pixel."""
+        # High energy for border pixels to prevent carving through the edges
+        if x == 0 or x == self._width - 1 or y == 0 or y == self._height - 1:
+            return 1000.0
+
+        r_left, g_left, b_left = self._image.getpixel((x - 1, y))
+        r_right, g_right, b_right = self._image.getpixel((x + 1, y))
+        dx_squared = (r_right - r_left)**2 + (g_right - g_left)**2 + (b_right - b_left)**2
+
+        r_up, g_up, b_up = self._image.getpixel((x, y - 1))
+        r_down, g_down, b_down = self._image.getpixel((x, y + 1))
+        dy_squared = (r_down - r_up)**2 + (g_down - g_up)**2 + (b_down - b_up)**2
+
+        return math.sqrt(dx_squared + dy_squared)
+
+    def find_vertical_seam(self):
         """Finds the lowest energy vertical path from top to bottom."""
         # Create a 2D grid to store the minimum cost to reach each pixel
         # and another grid to remember the path (which pixel we came from)
@@ -48,7 +75,7 @@ def find_vertical_seam(self):
 
         return seam
 
-def find_horizontal_seam(self):
+    def find_horizontal_seam(self):
         """Finds the lowest energy horizontal path from left to right."""
         # Create a 2D grid for costs and a grid to remember the path
         cost = [[0.0] * self._width for _ in range(self._height)]
@@ -96,7 +123,7 @@ def find_horizontal_seam(self):
 
         return seam
 
-def remove_vertical_seam(self, seam):
+    def remove_vertical_seam(self, seam):
         """Removes a vertical seam from the image and updates its size."""
         # Check to make sure the seam array is the right size
         if len(seam) != self._height:
@@ -124,7 +151,7 @@ def remove_vertical_seam(self, seam):
         self._image = new_image
         self._width = new_width
 
-def remove_horizontal_seam(self, seam):
+    def remove_horizontal_seam(self, seam):
         """Removes a horizontal seam from the image and updates its size."""
         if len(seam) != self._width:
             raise ValueError("Seam length must match the image width.")
