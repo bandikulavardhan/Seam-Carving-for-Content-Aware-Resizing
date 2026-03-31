@@ -27,7 +27,7 @@ def main():
     original_image = Image.open(input_file)
     carver = SeamCarver(original_image)
     
-    print(f"Original size: {carver._width}x{carver._height}")
+    print(f"Original size: {carver.width()}x{carver.height()}")
     
     # 3. Remove some vertical seams
     seams_to_remove = 20
@@ -38,10 +38,10 @@ def main():
         if (i+1) % 5 == 0:
             print(f"  Removed {i+1} seams...")
 
-    print(f"New size: {carver._width}x{carver._height}")
+    print(f"New size: {carver.width()}x{carver.height()}")
     
     # 4. Save the result
-    carver._image.save(output_file)
+    carver.picture().save(output_file)
     print(f"Saved processed image to: {output_file}")
 
 if __name__ == "__main__":

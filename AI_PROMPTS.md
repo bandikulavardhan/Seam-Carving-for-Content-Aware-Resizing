@@ -17,3 +17,9 @@ Problem: The seam_carver.py file only had standalone functions missing imports a
 Prompt: "help format these inside a class SeamCarver:, add the missing module imports, and write a quick test script so we can actually see it run and process an image?".
 
 Modifications: I reviewed the wrapped SeamCarver class and the new test_seam_carver.py script to ensure it correctly initializes the image state and runs the vertical seam removal without errors.
+
+AI Tool Used: Gemini
+
+Specific Prompt: No direct prompt used for the horizontal seam.
+
+Context & Outcome: I used the AI-generated vertical DP logic as a template and manually swapped the X and Y coordinates to make it work horizontally. This explains why the structure is identical to the AI code.

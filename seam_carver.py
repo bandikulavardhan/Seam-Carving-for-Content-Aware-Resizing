@@ -9,6 +9,18 @@ class SeamCarver:
         self._width = self._image.width
         self._height = self._image.height
 
+    def width(self):
+        """Returns the width of the image."""
+        return self._width
+
+    def height(self):
+        """Returns the height of the image."""
+        return self._height
+
+    def picture(self):
+        """Returns the current image."""
+        return self._image
+
     def energy(self, x, y):
         """Calculates the dual-gradient energy of a pixel."""
         # High energy for border pixels to prevent carving through the edges
@@ -125,9 +137,20 @@ class SeamCarver:
 
     def remove_vertical_seam(self, seam):
         """Removes a vertical seam from the image and updates its size."""
+
+        if seam is None:
+            raise ValueError("Seam cannot be None.")
+            
+        if self._width <= 1:
+            raise ValueError("Image width is already 1. Cannot remove more seams.")
+
         # Check to make sure the seam array is the right size
         if len(seam) != self._height:
             raise ValueError("Seam length must match the image height.")
+
+        for i in range(1, len(seam)):
+            if abs(seam[i] - seam[i - 1]) > 1:
+                raise ValueError("Seam pixels must be adjacent.")
 
         # Create a new blank image that is 1 pixel narrower
         new_width = self._width - 1
@@ -153,8 +176,19 @@ class SeamCarver:
 
     def remove_horizontal_seam(self, seam):
         """Removes a horizontal seam from the image and updates its size."""
+
+        if seam is None:
+            raise ValueError("Seam cannot be None.")
+            
+        if self._height <= 1:
+            raise ValueError("Image height is already 1. Cannot remove more seams.")
+
         if len(seam) != self._width:
             raise ValueError("Seam length must match the image width.")
+
+        for i in range(1, len(seam)):
+            if abs(seam[i] - seam[i - 1]) > 1:
+                raise ValueError("Seam pixels must be adjacent.")
 
         # Create a new blank image that is 1 pixel shorter
         new_height = self._height - 1
